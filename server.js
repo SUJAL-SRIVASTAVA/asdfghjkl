@@ -26,6 +26,7 @@ const dc_p8 = require("./subjects/dc/p8");
 const dc_p9 = require("./subjects/dc/p9");
 const dc_p10 = require("./subjects/dc/p10");
 
+const fswd_p3 = require('./subjects/fswd/p3');
 // Mount the routers on the corresponding base paths
 app.use("/os/p1", os_p1);
 app.use("/os/p2", os_p2);
@@ -50,6 +51,8 @@ app.use("/dc/p8", dc_p8);
 app.use("/dc/p9", dc_p9);
 app.use("/dc/p10", dc_p10);
 
+
+app.use("/fswd/p3", fswd_p3);
 // Default route for testing
 app.get("/", (req, res) => {
   res.send("Welcome to the Express backend!");
