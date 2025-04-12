@@ -30,6 +30,12 @@ const fswd_p1 = require('./subjects/fswd/p1');
 const fswd_p2 = require('./subjects/fswd/p2');
 const fswd_p3 = require('./subjects/fswd/p3');
 const fswd_p4 = require('./subjects/fswd/p4');
+const fswd_p5 = require('./subjects/fswd/p5');
+const fswd_p6 = require('./subjects/fswd/p6');
+const fswd_p7 = require('./subjects/fswd/p7');
+const fswd_p8 = require('./subjects/fswd/p8');
+const fswd_p9 = require('./subjects/fswd/p9');
+const fswd_p10 = require('./subjects/fswd/p10');
 // Mount the routers on the corresponding base paths
 app.use("/os/p1", os_p1);
 app.use("/os/p2", os_p2);
@@ -59,6 +65,12 @@ app.use("/fwsd/p1", fswd_p1);
 app.use("/fswd/p2", fswd_p2);
 app.use("/fswd/p3", fswd_p3);
 app.use("/fswd/p4", fswd_p4);
+app.use("/fswd/p5", fswd_p5);
+app.use("/fswd/p6", fswd_p6);
+app.use("/fswd/p7", fswd_p7);
+app.use("/fswd/p8", fswd_p8);
+app.use("/fswd/p9", fswd_p8);
+app.use("/fswd/p10", fswd_p10);
 // Default route for testing
 app.get("/", (req, res) => {
   res.send("Welcome to the Express backend!");
