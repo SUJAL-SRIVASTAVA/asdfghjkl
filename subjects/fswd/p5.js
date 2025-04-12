@@ -120,14 +120,14 @@ router.get("/", (req, res) => {
             html += '<thead><tr><th>Roll Number</th><th>Name</th><th>Mobile</th><th>Email</th><th>Address</th><th>Timestamp</th></tr></thead><tbody>';
             
             storedData.forEach(student => {
-                html += `<tr>
+                html += <tr>
                     <td>${student.rollNumber}</td>
                     <td>${student.firstName}</td>
                     <td>${student.mobile}</td>
                     <td>${student.email}</td>
                     <td>${student.address}</td>
                     <td>${student.timestamp}</td>
-                </tr>`;
+                </tr>;
             });
             
             html += '</tbody></table></div>';
