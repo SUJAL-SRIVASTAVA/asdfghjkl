@@ -5,7 +5,7 @@ const router = express.Router();
 // GET /os/p1
 router.get("/", (req, res) => {
   const codeString = `
-  //HAMMINGCODE
+  //python code
   def calculate_parity_bits(data_bits):
     """Calculate and insert parity bits in the 7-bit Hamming Code (7,4)"""
     p1 = data_bits[0] ^ data_bits[1] ^ data_bits[3]
@@ -16,7 +16,6 @@ router.get("/", (req, res) => {
     hamming_code = [p1, p2, data_bits[0], p3, data_bits[1], data_bits[2], data_bits[3]]
     
     return hamming_code
-
 def detect_and_correct_error(received_bits):
     """Detect and correct single-bit error in received 7-bit Hamming Code"""
     p1 = received_bits[0] ^ received_bits[2] ^ received_bits[4] ^ received_bits[6]

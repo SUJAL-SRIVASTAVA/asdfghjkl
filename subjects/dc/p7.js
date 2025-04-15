@@ -5,71 +5,56 @@ const router = express.Router();
 // GET /os/p1
 router.get("/", (req, res) => {
   const codeString = `
+clc;
+clear;
 
-  //QUANTIZZATION
-  theta = 2 * %pi;
-points = 100;
-freq = 1;
-amp = 1;
-time_vals = linspace(0, theta, points);
-signal = amp * sin(2 * %pi * freq * time_vals);
-subplot(411)
-plot(time_vals, signal);
-xlabel('Time');
+// Time vector and analog signal (sine wave by default)
+t = 0:0.001:1;
+analog_signal = sin(2 * %pi * 5 * t); // You can change this to other waveforms
+
+// You can use these instead for other types:
+// analog_signal = (2 * abs(2 * (t * 5 - floor(t * 5 + 0.5)))) - 1; // Triangular wave
+// analog_signal = sawtooth(2 * %pi * 5 * t); // Sawtooth wave
+
+// Sampling
+Ts = 0.01;
+tsampled = 0:Ts:1;
+sampled_signal = sin(2 * %pi * 5 * tsampled); // Change waveform accordingly
+
+// Quantization
+L = 8; // 3-bit PCM -> 8 levels
+min_val = -1;
+max_val = 1;
+quant_step = (max_val - min_val) / (L - 1);
+quantized_signal = round((sampled_signal - min_val) / quant_step) * quant_step + min_val;
+
+// Digitization (Binary Encoding)
+digital_signal = round((sampled_signal - min_val) / quant_step);
+binary_signal = dec2bin(digital_signal, log2(L));
+
+// Plotting
+clf();
+subplot(3,1,1);
+plot(t, analog_signal);
+title('Original Analog Signal');
+xlabel('Time (s)');
 ylabel('Amplitude');
-title('Original Sine Wave');
-sample_rate = freq * 2;
-index = 1;
-for j = 1:sample_rate:length(signal)
-    sampled_signal(index) = signal(j);
-    sampled_time(index) = time_vals(j);
-    index = index + 1;
-end
-subplot(412)
-plot2d3(sampled_time, sampled_signal);
-xlabel('Time (Sampled)');
+
+subplot(3,1,2);
+plot2d3(tsampled, sampled_signal);
+title('Sampled Signal');
+xlabel('Time (s)');
 ylabel('Amplitude');
-title('Downsampled Sine Wave');
-levels = 8;
-step_size = 2 * amp / levels;
-quantized_vals = zeros(1, length(sampled_signal));
-for j = 1:length(sampled_signal)
-    norm_val = sampled_signal(j) / step_size;
-    counter = 0;
-    for k = -levels/2:1:(levels/2)-1
-        if (norm_val >= k) & (norm_val < k + 1) then
-            quantized_vals(j) = counter;
-        end
-        counter = counter + 1;
-    end
-end
-disp("Quantized Code:");
-disp(quantized_vals);
-binary_vals = dec2bin(quantized_vals);
-disp("Binary Representation:");
-disp(binary_vals);
-subplot(413)
-quant_bits = 2;
-quant_levels = 2^quant_bits;
-quantized_x = round((signal + 1) * (quant_levels - 1) / 2);
-plot(time_vals, signal, time_vals, (quantized_x * 2 / (quant_levels - 1)) - 1);
-xlabel('Time');
+
+subplot(3,1,3);
+plot2d3(tsampled, quantized_signal);
+title('Quantized Signal');
+xlabel('Time (s)');
 ylabel('Amplitude');
-title('Original and Quantized Sine Waves');
-legend('Original', 'Quantized');
-digital_out = [];
-pulse_rate = 2 * freq;
-for j = 1:pulse_rate
-    pulse_amp = level1(quantized_vals(j));
-    pulse_seq = ones(1, pulse_rate);
-    pulse_seq = pulse_seq * pulse_amp;
-    digital_out = [digital_out, pulse_seq];
-end
-subplot(414)
-plot(digital_out);
-xlabel('Time');
-ylabel('Amplitude');
-title('Digital Signal (Pulse Amplitude Modulation)');
+
+disp("Binary Encoded Output:");
+disp(binary_signal);
+
 
   `;
   res.json({ code: codeString });

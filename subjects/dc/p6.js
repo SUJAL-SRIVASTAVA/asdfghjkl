@@ -5,72 +5,60 @@ const router = express.Router();
 // GET /os/p1
 router.get("/", (req, res) => {
   const codeString = `
-  //MODULATION
-  fs = 10000;  
-t = 0:1/fs:0.1;
-fc = 1000;  
-Am = 1;  
-Ac = 1;  
-fm = 100;
-message = Am * sin(2 * %pi * fm * t);
+carrier_freq = 15;
+input_signal = 5;
+carrier_amp = 5;
+message_amp = 0.5;
+beta_FM = 4;
+beta_PM = 2;
+
+t = 0:0.001:1;
 
 
-am_signal = Ac * (1 + 0.5 * sin(2 * %pi * fm * t)) .* sin(2 * %pi * fc * t); 
+ms = message_amp * sin(2 * %pi * input_signal * t);
 
 
-kf = 75; 
-fm_signal = Ac * sin(2 * %pi * fc * t + kf * cumsum(message)/fs);
+cs = carrier_amp * cos(2 * %pi * carrier_freq * t);
 
- 
-kp = 1;
-pm_signal = Ac * sin(2 * %pi * fc * t + kp * message); 
+am = (1 + ms) .* cs;
+
+fm = carrier_amp * cos(2 * %pi * carrier_freq * t + 2 * %pi * beta_FM * ms);
+
+pm = carrier_amp * cos(2 * %pi * carrier_freq * t + 2 * %pi * beta_PM * cumsum(ms));
+
+figure;
+
+subplot(2,3,1);
+plot(t, ms, 'b');
+title('Message Signal');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+subplot(2,3,2);
+plot(t, cs, 'r');
+title('Carrier Signal');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+subplot(2,3,3);
+plot(t, am, 'g');
+title('Amplitude Modulation');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+subplot(2,3,4);
+plot(t,fm, 'm');
+title('Frequency Modulation');
+xlabel('Time (s)');
+ylabel('Amplitude');
+
+subplot(2,3,5);
+plot(t, pm, 'b');
+title('Phase Modulation');
+xlabel('Time (s)');
+ylabel('Amplitude');
 
 
-clf;
-subplot(3,1,1);
-plot(t, am_signal);
-title("Amplitude Modulation (AM)");
-xlabel("Time (s)");
-ylabel("Amplitude");
-
-subplot(3,1,2);
-plot(t, fm_signal);
-title("Frequency Modulation (FM)");
-xlabel("Time (s)");
-ylabel("Amplitude");
-
-subplot(3,1,3);
-plot(t, pm_signal);
-title("Phase Modulation (PM)");
-xlabel("Time (s)");
-ylabel("Amplitude");
-
-
-f = linspace(-fs/2, fs/2, length(t));
-
-AM_spectrum = abs(fftshift(fft(am_signal))); 
-FM_spectrum = abs(fftshift(fft(fm_signal))); 
-PM_spectrum = abs(fftshift(fft(pm_signal))); 
-
-
-figure();
-subplot(3,1,1);
-plot(f, AM_spectrum);
-title("AM Spectrum");
-xlabel("Frequency (Hz)");
-ylabel("Magnitude");
-
-subplot(3,1,2);
-plot(f, FM_spectrum);
-title("FM Spectrum");
-xlabel("Frequency (Hz)");
-ylabel("Magnitude");
-
-subplot(3,1,3);
-plot(f, PM_spectrum);
-title("PM Spectrum");
-xlabel("Frequency (Hz)");
-ylabel("Magnitude");
 `;
   res.json({ code: codeString });
 });
