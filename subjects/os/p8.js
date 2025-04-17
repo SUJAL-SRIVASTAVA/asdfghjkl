@@ -5,113 +5,83 @@ const router = express.Router();
 // GET /os/p1
 router.get("/", (req, res) => {
   const codeString = `
-  //fcfs
-  #include <stdio.h>
+  
+#include <bits/stdc++.h>
+#include <queue>
 
-struct Process {
-    int id;     
-    int arrival;    
-    int burst;      
-    int completion; 
-    int waiting;    
-    int turnaround;
+using namespace std;
+
+struct p
+{
+    int arr;
+    int num;
+    int burst;
+    int wt;
+    int tt;
 };
 
-void sortByArrival(struct Process p[], int n) {
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (p[j].arrival > p[j + 1].arrival) {
-                struct Process temp = p[j];
-                p[j] = p[j + 1];
-                p[j + 1] = temp;
+void fcfs(queue<p> process)
+{
+    int timestamp = 0;
+    int total_wt = 0;
+    int total_tt = 0;
+    int n = process.size();
+
+    while (!process.empty())
+    {
+        p curr = process.front();
+        process.pop();
+        if (timestamp < curr.arr)
+        {
+            int t = timestamp;
+            for (int i = 0; i < curr.arr - t; i++)
+            {
+                cout << timestamp + 1 << " ---- No process is being executed" << endl;
+                timestamp++;
             }
+            cout << "\n";
         }
-    }
-}
 
-void displayGanttChart(struct Process p[], int n) {
-    printf("\nGantt Chart:\n");
+        curr.wt = timestamp - curr.arr;
+        curr.tt = curr.wt + curr.burst;
 
-    printf(" ");
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < p[i].burst; j++) printf("--");
-        printf(" ");
-    }
-    printf("\n|");
+        total_wt += curr.wt;
+        total_tt += curr.tt;
 
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < p[i].burst - 1; j++) printf(" ");
-        printf("P%d", p[i].id);
-        for (int j = 0; j < p[i].burst - 1; j++) printf(" ");
-        printf("|");
-    }
-    printf("\n ");
-
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < p[i].burst; j++) printf("--");
-        printf(" ");
-    }
-
-    printf("\n0");
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < p[i].burst; j++) printf("  ");
-        printf("%d", p[i].completion);
-    }
-    printf("\n");
-}
-
-void fcfsScheduling(struct Process p[], int n) {
-    int currentTime = 0;
-    float totalWaiting = 0, totalTurnaround = 0;
-
-    sortByArrival(p, n);
-
-    for (int i = 0; i < n; i++) {
-        if (currentTime < p[i].arrival) {
-            currentTime = p[i].arrival; 
+        cout << "Process " << curr.num << " is being executed\n";
+        for (int i = 0; i < curr.burst; i++)
+        {
+            cout << timestamp + 1 << " ---- Process-" << curr.num << endl;
+            timestamp++;
         }
-        p[i].completion = currentTime + p[i].burst; 
-        p[i].turnaround = p[i].completion - p[i].arrival; 
-        p[i].waiting = p[i].turnaround - p[i].burst; 
+        cout << "Process " << curr.num << " is completed\n\n";
 
-        totalWaiting += p[i].waiting;
-        totalTurnaround += p[i].turnaround;
-        
-        currentTime = p[i].completion;
+        cout << "Process " << curr.num << " Arrival Time: " << curr.arr << endl;
+        cout << "Process " << curr.num << " Waiting Time: " << curr.wt << endl;
+        cout << "Process " << curr.num << " Turnaround Time: " << curr.tt << endl;
+        cout << "\n";
     }
-
-    printf("\nProcess\tArrival\tBurst\tCompletion\tTurnaround\tWaiting\n");
-    for (int i = 0; i < n; i++) {
-        printf("P%d\t%d\t%d\t%d\t\t%d\t\t%d\n",
-               p[i].id, p[i].arrival, p[i].burst, p[i].completion,
-               p[i].turnaround, p[i].waiting);
-    }
-
-    printf("\nAverage Waiting Time: %.2f\n", totalWaiting / n);
-    printf("Average Turnaround Time: %.2f\n", totalTurnaround / n);
-
-    displayGanttChart(p, n);
+    cout << "\nAverage Waiting Time: " << (float)total_wt / n << endl;
+    cout << "Average Turnaround Time: " << (float)total_tt / n << endl;
 }
 
-int main() {
+int main()
+{
+    queue<p> process;
     int n;
-
-    printf("Enter the number of processes: ");
-    scanf("%d", &n);
-
-    struct Process p[n];
-
-    printf("Enter Arrival Time and Burst Time for each process:\n");
-    for (int i = 0; i < n; i++) {
-        p[i].id = i + 1;
-        printf("P%d Arrival Time: ", i + 1);
-        scanf("%d", &p[i].arrival);
-        printf("P%d Burst Time: ", i + 1);
-        scanf("%d", &p[i].burst);
+    cout << "Enter the number of processes: ";
+    cin >> n;
+    for (int i = 0; i < n; i++)
+    {
+        int parrival, pburst;
+        cout << "Enter process " << i + 1 << "'s arrival time: ";
+        cin >> parrival;
+        cout << "Enter process " << i + 1 << "'s burst time: ";
+        cin >> pburst;
+        process.push({parrival, i + 1, pburst, 0, 0});
     }
 
-    fcfsScheduling(p, n);
-
+    fcfs(process);
     return 0;
 }
   `;

@@ -5,6 +5,58 @@ const router = express.Router();
 // GET /os/p1
 router.get("/", (req, res) => {
   const codeString = `
+
+//sujal
+sudo apt install gcc
+cd path
+gcc fork.c -o fork
+./fork
+
+#include <stdio.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+int main(){
+    fork();
+    fork();
+    fork();
+    fork();
+
+    printf("HELlo there from FORK() function!! \nPID=%d\n", getpid());
+
+    return 0;
+}
+
+//exec
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[]) {
+    printf("PID of exec1.c = %d\n", getpid());
+    
+    char *args[] = {"Hello", "there", "from EXEC() function", NULL};
+    execv("./ex2", args);
+
+    return 0;
+}
+
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[]) {
+    printf("We are in exec2.c\n");
+    printf("PID of exec2.c = %d\n", getpid());
+    return 0;
+}
+
+gcc exec2.c -o ex2
+gcc exec1.c -o ex1
+./ex1
+
+
+//other
 //FORK
 
 

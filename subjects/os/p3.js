@@ -6,47 +6,55 @@ const router = express.Router();
 router.get("/", (req, res) => {
   const codeString = `
 
-//FOLE CONCATINATOR, WRITE TILL END , COMPARE FILE
-
-
-  //COncat
-  cat file1.txt file2.txt > file3.txt
-
-echo "file1.txt and file2.txt have been concatenated into file3.txt."
-echo "file1"
-cat file1.txt
-echo "file2"
-cat file2.txt
-echo "file3"
-cat file3.txt
-
-//wirte till end
-Line_count=0
-echo "Enter the lines of text (type 'end' to stop): " data. txt
-while true; do
-read line
-[ "$line" = "end" ] && break
-echo "$line" »> data.txt line_count=$((line_count+1))
-done
-echo "Total lines entered: $line_count" echo "Data saved in data. txt"
-
-
-
-//compare file
-echo "Comparing file1.txt and file2.txt:"
-if cmp file1.txt file2.txt
-then
-echo "They are similar"
-else
-echo "They are different"
+if [ "$#" -lt 2 ]; then
+    echo "Please enter the valid numbers of arguments"
+    exit 1
 fi
 
+output_file="$1"
+shift
+cat "$@" > "$output_file"
+echo "Files are concatenated successfully."
 
+//
+output_file="data.txt"
+line_count=0
 
+echo "Enter the input lines"
 
+while true; do
+    read line
+    if [ "$line" == "end" ]; then
+        break
+    fi
+    echo "$line" >> "$output_file"
+    ((line_count++))
+done
 
+echo "Total numbers of lines : $line_count"
 
+//
+if [ "$#" -ne 2 ]; then
+    echo "Please enter the valid arguments"
+    exit 1
+fi
 
+file1="$1"
+file2="$2"
+
+if [ ! -f "$file1" ] || [ ! -f "$file2" ]; then
+    echo "Please provide valid files"
+    exit 1
+fi
+
+echo "Using DIFF"
+diff "$file1" "$file2"
+
+echo "Using CMP"
+cmp "$file1" "$file2"
+
+echo "Using COMM"
+comm <(sort "$file1") <(sort "$file2")
 
 
   `;

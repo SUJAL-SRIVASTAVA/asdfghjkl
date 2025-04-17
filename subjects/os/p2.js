@@ -5,81 +5,106 @@ const router = express.Router();
 // GET /os/p2
 router.get("/", (req, res) => {
   const codeString = `
-//CALCULATOR
 
-  //if
-  #!/bin/bash
-
-echo "Enter first number:"
-read num1
-
-echo "Enter second number:"
-read num2
-
-echo "Select operation:"
-echo "1. Add"
-echo "2. Subtract"
-echo "3. Multiply"
-echo "4. Divide"
-read choice
-
-if [ "$choice" -eq 1 ]; then
-    result=$(echo "$num1 + $num2" | bc)
-elif [ "$choice" -eq 2 ]; then
-    result=$(echo "$num1 - $num2" | bc)
-elif [ "$choice" -eq 3 ]; then
-    result=$(echo "$num1 * $num2" | bc)
-elif [ "$choice" -eq 4 ]; then
-    result=$(echo "$num1 / $num2" | bc)
+echo "Welcome to Linux Calculator"
+echo "1) Arithmetic operations"
+echo "2) logical operations"
+echo "3) Others"
+read -p 'Enter the choice:' choice1
+case $choice1 in
+1)
+echo "Arithmetic operations"
+echo "1) Addition"
+echo "2) Subtraction"
+echo "3) Multiplication"
+echo "4) Division"
+echo "5) Modulo"
+read -p 'Enter the choice:' choice2
+read -p 'Enter the first number:' num1
+read -p 'Enter the second number:' num2
+case $choice2 in
+1)
+result=$((num1+num2))
+echo "answer = $result"
+;;
+2)
+result=$((num1-num2))
+echo "answer = $result"
+;;
+3)
+result=$((num1*num2))
+echo "answer = $result"
+;;
+4)
+if [ $num2 -ne 0 ];
+then
+result=$((num1/num2))
+echo "answer = $result"
 else
-    echo "Invalid choice. Please select a valid operation."
-    exit 1
+echo "Division by ZERO error"
 fi
-
-echo "Result = $result"
-
-
-
-
-
-
-//switch
-
-#!/bin/bash
-
-echo "Enter first number:"
-read num1
-
-echo "Enter second number:"
-read num2
-
-echo "Select operation:"
-echo "1. Add"
-echo "2. Subtract"
-echo "3. Multiply"
-echo "4. Divide"
-read choice
-
-case $choice in
-    1)
-        result=$(echo "$num1 + $num2" | bc)
-        ;;
-    2)
-        result=$(echo "$num1 - $num2" | bc)
-        ;;
-    3)
-        result=$(echo "$num1 * $num2" | bc)
-        ;;
-    4)
-        result=$(echo "$num1 / $num2" | bc -l)
-        ;;
-    *)
-        echo "Invalid choice. Please select a valid operation."
-        exit 1
-        ;;
+;;
+5)
+if [ $num2 -ne 0 ];
+then
+result=$((num1%num2))
+echo "answer = $result"
+else
+echo "Modulo by ZERO error"
+fi
+;;
+*)
+echo "Enter a valid number"
+;;
 esac
-
-echo "Result = $result"
+;;
+2)
+echo "Logical operations"
+echo "1) AND (&&)"
+echo "2) OR (||)"
+echo "3) NOT (!)"
+echo "4) XOR (^)"
+read -p 'Enter the choice:' choice2
+read -p 'Enter the first boolean value:' num1
+read -p 'Enter the second boolean value:' num2
+case $choice2 in
+1)
+result=$((num1&&num2))
+echo "answer = $result"
+;;
+2)
+result=$((num1||num2))
+echo "answer = $result"
+;;
+3)
+result=$((!num1))
+echo "answer of number1 = $result"
+;;
+4)
+result=$((num1^num2))
+echo "answer = $result"
+;;
+*)
+echo "Enter a valid number"
+;;
+esac
+;;
+3)
+echo "Others"
+echo "1) Square root"
+echo "2) Power"
+echo "3) Absolute value"
+read -p 'Enter the choice' choice2
+read -p 'Enter the number' num1
+case $choice2 in
+1)
+read -p 'Enter the other number' num2
+result=$((num1^num2))
+echo "Answer = $result"
+;;
+esac
+;;
+esac
 
 
 
